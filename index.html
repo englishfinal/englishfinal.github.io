@@ -82,6 +82,7 @@ class Question {
     const ctx = canvas.getContext('2d'); 
     let speed = 0.01;
     let score = 0;
+    let highScore = 0;
     let paused = false;
     let qs = []
     qs.push(new Question("What is the color of Holden's hat?", ["Red", "Green", "Grey", "Yellow"]))
@@ -140,6 +141,7 @@ class Question {
             ctx.fillText(`${score}`, window.innerWidth/2,50)
             ctx.font = '24px arial'
             ctx.fillText(`Catching The Rye`, 2,38)
+            ctx.fillText(`High Score: ${highScore}`, 2,38+30)
             if(Math.random() < speed) ryes.push(new Rye(ctx))
             for(let rye of ryes) {
                 rye.draw();
@@ -148,6 +150,7 @@ class Question {
             for(let i = ryes.length-1; i >= 0; i--) {
                 if(ryes[i].y > window.innerHeight) {
                     ryes = [];
+                    if(score > highScore) highScore = score;
                     score = 0;
                     speed = 0.01;
                     paused = true;
