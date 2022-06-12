@@ -1,0 +1,168 @@
+<html>
+<body>
+
+<canvas id="canvas">
+Your browser does not support the HTML canvas tag.
+</canvas>
+</body>
+
+<script>
+class Rye {
+    constructor(ctx) {
+        this.x = (Math.random() * (window.innerWidth-150));
+        this.y = 0;
+        this.speed = 0;
+        this.ctx = ctx;
+        this.img = new Image();
+        this.img.src = 'https://arnoldbread.com/sites/all/files/products/arnold/Arnold%20Rye%20Jewish%20Seeded%207341003205.png';
+    
+    }
+    draw() {
+        this.tick()
+        this.ctx.translate(this.x, this.y);
+        this.ctx.drawImage(this.img, 0, 0, 100, 100);
+        this.ctx.translate(-this.x, -this.y);
+    }
+
+    tick() {
+        this.y += this.speed;
+        this.speed += 0.2;
+        if(this.y > window.innerHeight) console.log("game over state!")
+    }
+}
+
+class Question {
+    constructor(q, a) {
+        this.q = q;
+        this.offset = Math.floor(Math.random()*4)
+        this.answers = []
+        for(let i = 0; i < 4; i++) {
+            console.log((i+this.offset) % 4)
+            this.answers.push(a[(this.offset + i) % 4]);
+        }
+        this.offset = ((4-this.offset) % 4);
+        console.log(this.answers)
+    }
+
+    draw(ctx) {
+        let padding = 15
+        let topPadding = 50;
+        ctx.fillStyle = '#1ecbe1'
+        ctx.fillRect(0,0,window.innerWidth, window.innerHeight)
+        ctx.fillStyle = '#0f9cf0'
+        //left top
+        ctx.fillRect(padding, padding + topPadding, window.innerWidth/2-padding/2, window.innerHeight/2-padding-topPadding)
+        //left bottom
+        ctx.fillRect(padding, window.innerHeight/2+padding/2, window.innerWidth/2-padding/2, window.innerHeight-padding/2)
+
+        ctx.fillRect(window.innerWidth/2+padding, padding + topPadding, window.innerWidth/2-padding*2, window.innerHeight/2-padding-topPadding)
+        //left bottom
+        ctx.fillRect(window.innerWidth/2+padding, window.innerHeight/2+padding/2, window.innerWidth/2-padding*2, window.innerHeight-padding/2)
+
+        ctx.fillStyle = 'white'
+        ctx.font = '36px arial'
+        ctx.fillText(this.q, 50,50)
+        ctx.font = '16px arial'
+        ctx.fillText(this.answers[0], window.innerWidth * 0.25,50 + window.innerHeight * 0.25) 
+        ctx.fillText(this.answers[1], window.innerWidth * 0.25,window.innerHeight * 0.75) 
+        ctx.fillText(this.answers[2], window.innerWidth * 0.75,50 + window.innerHeight * 0.25) 
+        ctx.fillText(this.answers[3], window.innerWidth * 0.75,window.innerHeight * 0.75) 
+    }
+
+    check(x, y) {
+        if(x < window.innerWidth/2 && y < window.innerHeight/2) return 0 == this.offset;
+        else if(x < window.innerWidth/2 && y > window.innerHeight/2) return 1 == this.offset; 
+        else if(x > window.innerWidth/2 && y < window.innerHeight/2) return 2 == this.offset; 
+        else if(x > window.innerWidth/2 && y > window.innerHeight/2) return 3 == this.offset; 
+    }
+}
+
+(function() {
+    const canvas = /** @type {HTMLCanvasElement} */ (document.getElementById('canvas'));
+    const ctx = canvas.getContext('2d'); 
+    let speed = 0.01;
+    let score = 0;
+    let paused = false;
+    let qs = []
+    qs.push(new Question("What is the color of Holden's hat?", ["Red", "Green", "Grey", "Yellow"]))
+    qs.push(new Question("Who did Holden give his hat to?", ["Pheobe", "Stradlater", "Allie", "Mr. Antolini"]))
+    qs.push(new Question("Where does Holden meet Pheobe near the end of the book?", ["Museum of Natural History", "Home", "School", "Central Park"]))
+    qs.push(new Question("Where does the book take place?", ["New York City", "Las Vegas", "Los Angeles", "Chicago"]))
+    qs.push(new Question("What is one reaccuring animal found throughout the book?", ["Ducks", "Frogs", "Dogs", "Rats"]))
+    qs.push(new Question("Who Reminds Holden of The Catcher in the Rye?", ["Singing Child", "Allie", "Mr. Antolini", "Pheobe"]))
+    qs.push(new Question("What was Holden's most recent school?", ["Pency Prep", "Whooton School", "Elkton Hills", "Princeton Prep"]))
+    qs.push(new Question("What school did Mr. Antolini teach at?", ["Pency Prep", "Whooton School", "Elkton Hills", "Princeton Prep"]))
+
+    let q = null;
+    window.addEventListener('resize', resizeCanvas, false);
+    window.addEventListener('mousedown', (e) => {onClick(e.offsetX, e.offsetY)}, false);
+    function onClick(x, y) {
+        if(paused){
+            if(q.check(x,y)) {
+                paused = false;
+                ctx.fillStyle = 'black'
+            } else {
+                newQ();
+            }
+        }
+        else{
+        for(let i = ryes.length-1; i >= 0; i--) {
+            if(x > ryes[i].x && x < ryes[i].x + 100 && 
+            y > ryes[i].y && y < ryes[i].y + 100) {
+                ryes.splice(i, 1);
+                speed += 0.0025
+                score++;
+                break;
+            }
+        }
+    }
+    }
+
+    function newQ() {
+        q = qs[Math.floor(qs.length * Math.random())]
+    }
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    let ryes = [];
+    resizeCanvas();
+    setInterval(draw, 33)
+
+    let ryeImg = new Image();
+    ryeImg.src = 'https://images.fineartamerica.com/images/artworkimages/mediumlarge/2/rye-field-shaunl.jpg'
+
+    function draw() {
+        if(!paused){
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(ryeImg,0,0,window.innerWidth, window.innerHeight)
+            ctx.font = '48px arial'
+            ctx.fillText(`${score}`, window.innerWidth/2,50)
+            ctx.font = '24px arial'
+            ctx.fillText(`Catching The Rye`, 2,38)
+            if(Math.random() < speed) ryes.push(new Rye(ctx))
+            for(let rye of ryes) {
+                rye.draw();
+            }
+
+            for(let i = ryes.length-1; i >= 0; i--) {
+                if(ryes[i].y > window.innerHeight) {
+                    ryes = [];
+                    score = 0;
+                    speed = 0.01;
+                    paused = true;
+                    newQ();
+                    break;
+                }
+            }
+
+        } else {
+            q.draw(ctx)
+        }
+    }
+
+
+})();
+
+</script>
+</html>
