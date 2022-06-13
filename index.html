@@ -60,10 +60,10 @@ class Question {
         ctx.fillRect(window.innerWidth/2+padding, window.innerHeight/2+padding/2, window.innerWidth/2-padding*2, window.innerHeight-padding/2)
 
         ctx.fillStyle = 'white'
-        ctx.font = '24px arial'
-        ctx.fillText(this.q, 50,50)
-        ctx.font = '16px arial'
         ctx.textAlign = 'center'
+        ctx.font = '24px arial'
+        ctx.fillText(this.q, window.innerWidth/2,50)
+        ctx.font = '16px arial'
         ctx.fillText(this.answers[0], window.innerWidth * 0.25,50 + window.innerHeight * 0.25) 
         ctx.fillText(this.answers[1], window.innerWidth * 0.25,window.innerHeight * 0.75) 
         ctx.fillText(this.answers[2], window.innerWidth * 0.75,50 + window.innerHeight * 0.25) 
