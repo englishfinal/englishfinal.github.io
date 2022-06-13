@@ -25,7 +25,7 @@ class ChaserRye {
         this.x = 3*window.innerWidth/4-150;
         this.ctx.translate(this.x, this.y);
         this.ctx.rotate(Math.sin(this.tick)/8)
-        this.ctx.drawImage(this.img, -150, -150, 300, 300);
+        this.ctx.drawImage(this.img, -100, -100, 200, 200);
         this.ctx.rotate(-1 * (Math.sin(this.tick)/8));
         this.ctx.translate(-this.x, -this.y);
         this.tick += 0.05;
