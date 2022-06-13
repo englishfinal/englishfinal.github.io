@@ -63,6 +63,7 @@ class Question {
         ctx.font = '24px arial'
         ctx.fillText(this.q, 50,50)
         ctx.font = '16px arial'
+        ctx.textAlign = 'center'
         ctx.fillText(this.answers[0], window.innerWidth * 0.25,50 + window.innerHeight * 0.25) 
         ctx.fillText(this.answers[1], window.innerWidth * 0.25,window.innerHeight * 0.75) 
         ctx.fillText(this.answers[2], window.innerWidth * 0.75,50 + window.innerHeight * 0.25) 
@@ -83,6 +84,7 @@ class Question {
     let speed = 0.01;
     let score = 0;
     let highScore = 0;
+    let started = false;
     let paused = false;
     let qs = []
     qs.push(new Question("What is the color of Holden's hat?", ["Red", "Green", "Grey", "Yellow"]))
@@ -98,7 +100,12 @@ class Question {
     window.addEventListener('resize', resizeCanvas, false);
     window.addEventListener('mousedown', (e) => {onClick(e.offsetX, e.offsetY)}, false);
     function onClick(x, y) {
-        if(paused){
+        if(!started) {
+            started = true;
+            ctx.textAlign = 'start'
+            ctx.fillStyle = 'black'
+        }
+        else if(paused){
             if(q.check(x,y)) {
                 paused = false;
                 ctx.fillStyle = 'black'
@@ -134,8 +141,18 @@ class Question {
     ryeImg.src = 'https://images.fineartamerica.com/images/artworkimages/mediumlarge/2/rye-field-shaunl.jpg'
 
     function draw() {
-        if(!paused){
+        if(!started) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#a9a9a9';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white';
+            ctx.font = '48px arial'
+            ctx.textAlign = 'center'
+            ctx.fillText("Click anywhere to begin.", canvas.width/2, canvas.height/2);
+        }
+        else if(!paused){
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.textAlign = 'start'
             ctx.drawImage(ryeImg,0,0,window.innerWidth, window.innerHeight)
             ctx.font = '48px arial'
             ctx.fillText(`${score}`, window.innerWidth/2,50)
