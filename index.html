@@ -7,6 +7,30 @@ Your browser does not support the HTML canvas tag.
 </body>
 
 <script>
+
+class ChaserRye {
+    constructor(ctx) {
+        this.x = 3*window.innerWidth/4-150;
+        this.y = 160;
+        this.targetX = 200;
+        this.targetY = 200;
+        this.speed = 1;
+        this.ctx = ctx;
+        this.img = new Image();
+        this.img.src = 'https://arnoldbread.com/sites/all/files/products/arnold/Arnold%20Rye%20Jewish%20Seeded%207341003205.png';
+        this.tick = 0.0;
+    }
+
+    draw() {
+        this.ctx.translate(this.x, this.y);
+        this.ctx.rotate(Math.sin(this.tick)/8)
+        this.ctx.drawImage(this.img, -150, -150, 300, 300);
+        this.ctx.rotate(-1 * (Math.sin(this.tick)/8));
+        this.ctx.translate(-this.x, -this.y);
+        this.tick += 0.05;
+    }
+}   
+
 class Rye {
     constructor(ctx) {
         this.x = (Math.random() * (window.innerWidth-150));
@@ -86,6 +110,7 @@ class Question {
     let highScore = 0;
     let started = false;
     let paused = false;
+    let chaser = new ChaserRye(ctx);
     let qs = []
     qs.push(new Question("What is the color of Holden's hat?", ["Red", "Green", "Grey", "Yellow"]))
     qs.push(new Question("Who did Holden give his hat to?", ["Pheobe", "Stradlater", "Allie", "Mr. Antolini"]))
@@ -99,6 +124,12 @@ class Question {
     let q = null;
     window.addEventListener('resize', resizeCanvas, false);
     window.addEventListener('mousedown', (e) => {onClick(e.offsetX, e.offsetY)}, false);
+    window.addEventListener('mousemove', (e) => {
+        if(!started){
+        chaser.targetX = e.offsetX; 
+        chaser.targetY = e.offsetY; 
+        }
+    })
     function onClick(x, y) {
         if(!started) {
             started = true;
@@ -126,6 +157,8 @@ class Question {
     }
     }
 
+    
+
     function newQ() {
         q = qs[Math.floor(qs.length * Math.random())]
     }
@@ -145,10 +178,15 @@ class Question {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = '#a9a9a9';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'black';
+            ctx.font = '64px arial'
+            ctx.textAlign = 'center'
+            ctx.fillText("Catching The ", canvas.width/4, canvas.height/2 - 100);
             ctx.fillStyle = 'white';
             ctx.font = '48px arial'
             ctx.textAlign = 'center'
             ctx.fillText("Click anywhere to begin.", canvas.width/2, canvas.height/2);
+            chaser.draw();
         }
         else if(!paused){
             ctx.clearRect(0, 0, canvas.width, canvas.height);
