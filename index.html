@@ -22,7 +22,7 @@ class ChaserRye {
     }
 
     draw() {
-        this.x = 3*window.innerWidth/4-150;
+        this.x = 3*window.innerWidth/4-100;
         this.y = window.innerHeight/2-150;
         this.ctx.translate(this.x, this.y);
         this.ctx.rotate(Math.sin(this.tick)/8)
@@ -181,6 +181,7 @@ class Question {
         if(!started) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(bkrnd, 0, 0, canvas.width, canvas.height);
+            chaser.draw();
             ctx.fillStyle = 'black';
             ctx.strokeStyle = 'white';
             ctx.lineWidth = 5;
@@ -193,7 +194,6 @@ class Question {
             ctx.strokeText("Click anywhere to begin.", canvas.width/2, canvas.height/2);
             ctx.fillText("Click anywhere to begin.", canvas.width/2, canvas.height/2);
             ctx.fillStyle = 'white';
-            chaser.draw();
         }
         else if(!paused){
             ctx.clearRect(0, 0, canvas.width, canvas.height);
