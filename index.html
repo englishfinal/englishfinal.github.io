@@ -1,5 +1,5 @@
 <html>
-<body>
+<body style="margin: 0px;">
 
 <canvas id="canvas">
 Your browser does not support the HTML canvas tag.
@@ -11,7 +11,7 @@ Your browser does not support the HTML canvas tag.
 class ChaserRye {
     constructor(ctx) {
         this.x = 3*window.innerWidth/4-150;
-        this.y = 160;
+        this.y = window.innerHeight/2-150;
         this.targetX = 200;
         this.targetY = 200;
         this.speed = 1;
@@ -23,6 +23,7 @@ class ChaserRye {
 
     draw() {
         this.x = 3*window.innerWidth/4-150;
+        this.y = window.innerHeight/2-150;
         this.ctx.translate(this.x, this.y);
         this.ctx.rotate(Math.sin(this.tick)/8)
         this.ctx.drawImage(this.img, -100, -100, 200, 200);
@@ -106,6 +107,8 @@ class Question {
 (function() {
     const canvas = /** @type {HTMLCanvasElement} */ (document.getElementById('canvas'));
     const ctx = canvas.getContext('2d'); 
+    const bkrnd = new Image();
+    bkrnd.src = "https://i.pinimg.com/originals/cf/36/c6/cf36c6135ffdf46b323fb4df9473054e.jpg";
     let speed = 0.01;
     let score = 0;
     let highScore = 0;
@@ -177,16 +180,19 @@ class Question {
     function draw() {
         if(!started) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#a9a9a9';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(bkrnd, 0, 0, canvas.width, canvas.height);
             ctx.fillStyle = 'black';
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 5;
             ctx.font = '64px arial'
             ctx.textAlign = 'center'
-            ctx.fillText("Catching The ", canvas.width/4, canvas.height/2 - 100);
-            ctx.fillStyle = 'white';
+            ctx.strokeText("Catching The ", canvas.width/2-75, canvas.height/2 - 100);
+            ctx.fillText("Catching The ", canvas.width/2-75, canvas.height/2 - 100);
             ctx.font = '48px arial'
             ctx.textAlign = 'center'
+            ctx.strokeText("Click anywhere to begin.", canvas.width/2, canvas.height/2);
             ctx.fillText("Click anywhere to begin.", canvas.width/2, canvas.height/2);
+            ctx.fillStyle = 'white';
             chaser.draw();
         }
         else if(!paused){
